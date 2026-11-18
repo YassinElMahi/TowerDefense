@@ -3,9 +3,10 @@
         x:Class="TowerDefense.App.MainWindow"
         Title="Tower Defense"
         Width="600"
-        Height="455">
+        Height="490">
     <StackPanel Margin="16" Spacing="12">
         <TextBlock Text="Tower Defense" FontSize="24" FontWeight="Bold" />
+        <TextBlock x:Name="BaseHealthText" FontSize="16" />
         <TextBlock Text="D = départ · B = base · Gris = chemin · Vert = constructible"
                    TextWrapping="Wrap" />
         <StackPanel x:Name="MapPanel" HorizontalAlignment="Center" />
