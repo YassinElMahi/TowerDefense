@@ -20,4 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\TowerDefense.Core\TowerDefense.Core.csproj" />
   </ItemGroup>
+
+    <ItemGroup>
+    <None Update="map.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

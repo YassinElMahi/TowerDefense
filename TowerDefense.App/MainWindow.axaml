@@ -1,9 +1,13 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TowerDefense.App.MainWindow"
-        Title="TowerDefense.App">
-    Welcome to Avalonia!
+        Title="Tower Defense"
+        Width="600"
+        Height="455">
+    <StackPanel Margin="16" Spacing="12">
+        <TextBlock Text="Tower Defense" FontSize="24" FontWeight="Bold" />
+        <TextBlock Text="D = départ · B = base · Gris = chemin · Vert = constructible"
+                   TextWrapping="Wrap" />
+        <StackPanel x:Name="MapPanel" HorizontalAlignment="Center" />
+    </StackPanel>
 </Window>
