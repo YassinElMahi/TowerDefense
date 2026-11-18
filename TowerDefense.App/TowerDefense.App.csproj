@@ -23,5 +23,6 @@
 
     <ItemGroup>
     <None Update="map.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="waves.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

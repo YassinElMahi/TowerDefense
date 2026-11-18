@@ -13,7 +13,7 @@ namespace TowerDefense.App;
 public partial class MainWindow : Window
 {
     private readonly Dictionary<MapCell, TextBlock> _cellLabels = new();
-    private MapCell? _displayedEnemy;
+    private readonly HashSet<MapCell> _displayedEnemies = new();
 
     public MainWindow()
     {
@@ -21,10 +21,12 @@ public partial class MainWindow : Window
 
         var mapPanel = this.FindControl<StackPanel>("MapPanel")!;
         var healthText = this.FindControl<TextBlock>("BaseHealthText")!;
-        string filePath = Path.Combine(AppContext.BaseDirectory, "map.json");
 
-        GameMap map = GameMap.Load(filePath);
-        var game = new GameSession(map);
+        GameMap map = GameMap.Load(Path.Combine(AppContext.BaseDirectory, "map.json"));
+        WaveDefinition wave = WaveDefinition.Load(
+            Path.Combine(AppContext.BaseDirectory, "waves.json"));
+
+        var game = new GameSession(map, wave);
 
         for (int row = 0; row < map.Rows; row++)
         {
@@ -43,7 +45,7 @@ public partial class MainWindow : Window
 
         var timer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromMilliseconds(350)
+            Interval = TimeSpan.FromMilliseconds(GameSession.TickMilliseconds)
         };
 
         timer.Tick += (_, _) =>
@@ -51,7 +53,7 @@ public partial class MainWindow : Window
             game.Update();
             UpdateDisplay(map, game, healthText);
 
-            if (game.ActiveEnemy is null)
+            if (game.HasEnded)
             {
                 timer.Stop();
             }
@@ -98,20 +100,21 @@ public partial class MainWindow : Window
     {
         healthText.Text = $"PV de la base : {game.BaseHealth}";
 
-        if (_displayedEnemy is { } previous)
+        foreach (MapCell previous in _displayedEnemies)
         {
-            TextBlock previousLabel = _cellLabels[previous];
-            previousLabel.Text = GetCellLabel(map, previous);
-            previousLabel.Foreground = Brushes.White;
+            TextBlock label = _cellLabels[previous];
+            label.Text = GetCellLabel(map, previous);
+            label.Foreground = Brushes.White;
         }
 
-        _displayedEnemy = game.ActiveEnemy?.Position;
+        _displayedEnemies.Clear();
 
-        if (_displayedEnemy is { } current)
+        foreach (MapCell position in game.EnemyPositions)
         {
-            TextBlock currentLabel = _cellLabels[current];
-            currentLabel.Text = "●";
-            currentLabel.Foreground = Brushes.Gold;
+            TextBlock label = _cellLabels[position];
+            label.Text = "●";
+            label.Foreground = Brushes.Gold;
+            _displayedEnemies.Add(position);
         }
     }
 
