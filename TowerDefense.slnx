@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="TowerDefense.App/TowerDefense.App.csproj" />
+  <Project Path="TowerDefense.Core/TowerDefense.Core.csproj" />
+</Solution>
