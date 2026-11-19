@@ -10,5 +10,6 @@
         <TextBlock Text="D = départ · B = base · Gris = chemin · Vert = constructible"
                    TextWrapping="Wrap" />
         <StackPanel x:Name="MapPanel" HorizontalAlignment="Center" />
+        <TextBlock x:Name="ScoreText" TextWrapping="Wrap" />
     </StackPanel>
 </Window>

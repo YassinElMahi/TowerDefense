@@ -21,6 +21,24 @@ public partial class MainWindow : Window
 
         var mapPanel = this.FindControl<StackPanel>("MapPanel")!;
         var healthText = this.FindControl<TextBlock>("BaseHealthText")!;
+        var scoreText = this.FindControl<TextBlock>("ScoreText")!;
+
+string scoreDirectory = Path.Combine(
+    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+    "TowerDefense");
+
+var scoreStore = new ScoreStore(Path.Combine(scoreDirectory, "scores.json"));
+
+string FormatLeaderboard()
+{
+    IReadOnlyList<int> scores = scoreStore.Load();
+
+    return scores.Count == 0
+        ? "Meilleurs scores : aucun pour l’instant"
+        : $"Meilleurs scores : {string.Join(" · ", scores)}";
+}
+
+scoreText.Text = FormatLeaderboard();
 
         GameMap map = GameMap.Load(Path.Combine(AppContext.BaseDirectory, "map.json"));
         WaveDefinition wave = WaveDefinition.Load(
@@ -48,7 +66,7 @@ public partial class MainWindow : Window
             Interval = TimeSpan.FromMilliseconds(GameSession.TickMilliseconds)
         };
 
-        timer.Tick += (_, _) =>
+                timer.Tick += (_, _) =>
         {
             game.Update();
             UpdateDisplay(map, game, healthText);
@@ -56,12 +74,19 @@ public partial class MainWindow : Window
             if (game.HasEnded)
             {
                 timer.Stop();
+
+                int score = game.BaseHealth * 10;
+                Directory.CreateDirectory(scoreDirectory);
+                scoreStore.Save(score);
+                scoreText.Text = $"Score de la partie : {score}\n{FormatLeaderboard()}";
             }
         };
 
         Opened += (_, _) => timer.Start();
         Closed += (_, _) => timer.Stop();
     }
+    
+    
 
     private Border CreateCell(GameMap map, MapCell position)
     {
